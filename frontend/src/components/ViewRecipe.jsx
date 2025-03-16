@@ -2,7 +2,6 @@ import Header from './Header';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import '../ViewRecipe.css';
-import { Card, Button, Row, Col } from 'react-bootstrap';
 
 function ViewRecipe({ embedded }) {
   const [data, setData] = useState([]);
@@ -30,34 +29,34 @@ function ViewRecipe({ embedded }) {
       <h1 className="title">Recipe Details</h1>
       <div className="container">
         {selectedRecipe ? (
-          <Card className="mb-4">
-            <Card.Img variant="top" src={`http://localhost:3008/${selectedRecipe.image}`} />
-            <Card.Body>
-              <Card.Title>{selectedRecipe.name}</Card.Title>
-              <Card.Text><strong>Description:</strong> {selectedRecipe.description}</Card.Text>
-              <Card.Text><strong>Ingredients:</strong> {selectedRecipe.ingredients.join(", ")}</Card.Text>
-              <Card.Text><strong>Steps:</strong> {selectedRecipe.steps.join(", ")}</Card.Text>
-              <Card.Text><strong>Cooking Time:</strong> {selectedRecipe.cookingTime} minutes</Card.Text>
-              <Card.Text><strong>Servings:</strong> {selectedRecipe.servings}</Card.Text>
-              <Card.Text><strong>Cuisine Type:</strong> {selectedRecipe.cuisineType}</Card.Text>
-              <Card.Text><strong>Difficulty:</strong> {selectedRecipe.difficulty}</Card.Text>
-              <Button variant="primary" onClick={handleBack}>Back to All Recipes</Button>
-            </Card.Body>
-          </Card>
+          <div className="recipe-details-page">
+            <div className="background-image" style={{ backgroundImage: `url(http://localhost:3008/${selectedRecipe.image})` }}></div>
+            <div className="details-container">
+              <h2>{selectedRecipe.name}</h2>
+              <p><strong>Description:</strong> {selectedRecipe.description}</p>
+              <h4>Ingredients:</h4>
+              <p>{selectedRecipe.ingredients.join(", ")}</p>
+              <h4>Steps:</h4>
+              <p>{selectedRecipe.steps.join(", ")}</p>
+              <p><strong>Cooking Time:</strong> {selectedRecipe.cookingTime} minutes</p>
+              <p><strong>Servings:</strong> {selectedRecipe.servings}</p>
+              <p><strong>Cuisine Type:</strong> {selectedRecipe.cuisineType}</p>
+              <p><strong>Difficulty:</strong> {selectedRecipe.difficulty}</p>
+              <button onClick={handleBack}>Back to All Recipes</button>
+            </div>
+          </div>
         ) : (
-          <Row>
+          <div className="recipe-grid">
             {data.map((recipe, index) => (
-              <Col key={index} md={4} className="mb-4">
-                <Card onClick={() => handleRecipeClick(recipe)}>
-                  <Card.Img variant="top" src={`http://localhost:3008/${recipe.image}`} />
-                  <Card.Body>
-                    <Card.Title>{recipe.name}</Card.Title>
-                    <Card.Text>{recipe.description}</Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
+              <div key={index} className="recipe-card" onClick={() => handleRecipeClick(recipe)}>
+                <h2>{recipe.name}</h2>
+                {recipe.image && (
+                  <img src={`http://localhost:3008/${recipe.image}`} alt={recipe.name} className="recipe-image" />
+                )}
+                <p>{recipe.description}</p>
+              </div>
             ))}
-          </Row>
+          </div>
         )}
       </div>
     </div>

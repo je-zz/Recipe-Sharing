@@ -1,0 +1,251 @@
+/* Style.css */
+body{
+  font-family: Arial, sans-serif;
+}
+.login-container {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  width: 100vw;
+  background: url('../src/assets/loginimg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  overflow: hidden;
+}
+
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 20px;
+  width: 100vw;
+}
+
+.login-box {
+  padding: 20px;
+  background-color: #ffffff4d;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px #0000001a;
+  width: 350px;
+  backdrop-filter: blur(10px);
+}
+.box {
+  padding: 20px;
+  background-color: hsla(0, 0%, 100%, 0.3);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  backdrop-filter: blur(10px);
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #411302;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  position: relative;
+}
+
+input:focus {
+  border-color: #3b6a1a;
+}
+
+input:focus::placeholder {
+  color: transparent;
+}
+
+input:focus + label {
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  font-size: 12px;
+  color: #37550c;
+  background-color: white;
+  padding: 0 5px;
+}
+
+.btn-success {
+  background-color: #7c7c7c;
+  color: #411302;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 310px;
+}
+
+.btn-success:hover {
+  background-color: #411302;
+  color: #7c7c7c;
+}
+
+.register-link {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  text-decoration: none;
+  color: #411302;
+}
+
+.register-link:hover {
+  text-decoration: underline;
+}
+
+/* Background Image */
+.Recipe-background {
+  background: url('./assets/recipedet.jpg') no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Blur Effect Container */
+.Recipe-container {
+  backdrop-filter: blur(10px);
+  background-color: #ffffff4d;
+  padding: 20px;
+  border-radius: 12px;
+  width: 70%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto; /* Scrollable when fields increase */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Form Title */
+.Recipe-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* Input Fields */
+.Recipe-form input,
+.Recipe-form select {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.6);
+  outline: none;
+}
+
+.Recipe-form button {
+  padding: 10px 15px;
+  width: 100%;
+  background-color: #7c7c7c;
+  color: #411302;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.Recipe-form button:hover {
+  background-color: #411302;
+  color: #b0acac;
+}
+
+.Recipe-form input[type="file"] {
+  background-color: transparent;
+}
+
+/* Submit Button */
+.Recipe-form input[type="submit"] {
+  background-color: #411302;
+  color: #b0acac;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.Recipe-form input[type="submit"]:hover {
+  background-color: #7c7c7c;
+  color: #411302;
+}
+
+/* Update password */
+
+/* Background Image */
+.update-background {
+  background: url('./assets/password.jpg') no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Blur Container */
+.update-container {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 30px;
+  border-radius: 15px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Title */
+.update-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+/* Form Inputs */
+.update-form input {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.5);
+  outline: none;
+}
+
+/* Disabled Email Field */
+.update-form input:disabled {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Form Group */
+.update-form-group {
+  margin-bottom: 20px;
+}
+
+/* Submit Button */
+.update-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #7c7c7c;
+  color: #411302;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.update-button:hover {
+  background-color: #411302;
+  color: #b0acac;
+}
+
+

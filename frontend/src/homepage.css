@@ -1,0 +1,145 @@
+/* General container styling */
+.homepage-container {
+  padding-top: 60px;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+}
+
+/* Header styling */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #411302;
+  color: #ccc;
+  padding: 15px 30px;
+}
+
+.nav-bar {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-bar a {
+  color: #ccc;
+  text-decoration: none;
+  margin-right: 20px;
+  font-size: 20px;
+}
+
+.nav-bar a:hover {
+  text-decoration: underline;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logout-btn {
+  background-color: #7c7b7b;
+  border: none;
+  color: white;
+  padding: 7px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.logout-btn:hover {
+  background-color: #5c3838;
+}
+
+.hamburger {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.recipe-grid {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.recipe-card {
+  width: 300px;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: white;
+  overflow: hidden;
+}
+
+.recipe-card-img {
+  height: 150px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 15px;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+
+/* For mobile and tablet screens */
+@media (max-width: 768px) {
+  .nav-bar {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 80px;
+    left: 0;
+    background-color: #411302;
+    width: 100%;
+    padding: 20px 0;
+    text-align: center;
+  }
+
+  .nav-bar.active {
+    display: flex;
+  }
+
+  .hamburger {
+    display: block;
+  }
+}
+
+/* Search bar styling */
+.search-bar {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.search-bar input {
+  padding: 10px 15px;
+  width: 60%;
+  max-width: 600px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Recipe grid styling */
+.search-results {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+}
+

@@ -5,7 +5,7 @@ import Header from './Header';
 import { useSession } from '../SessionContext'
 import ViewRecipe from './ViewRecipe'
 import '../homepage.css'
-import { Card, Button, Row, Col, Form } from 'react-bootstrap'
+
 
 function Homepage() {
   const { user, setUser } = useSession()
@@ -54,43 +54,42 @@ function Homepage() {
   return (
     <div className="homepage-container">
       <Header />
-      <h1 className="title">Recipe Management</h1>
 
+      
       <div className="content">
-        <Form.Control
-          type="text"
-          placeholder="Search Recipes..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="mb-4"
-        />
-
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Search Recipes..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
         {selectedRecipe ? (
-          <Card className="mb-4">
-            <Card.Img variant="top" src={`http://localhost:3008/${selectedRecipe.image}`} />
-            <Card.Body>
-              <Card.Title>{selectedRecipe.name}</Card.Title>
-              <Card.Text>{selectedRecipe.description}</Card.Text>
-              <Button variant="primary" onClick={handleBack}>Back to Search Results</Button>
-            </Card.Body>
-          </Card>
-        ) : searchQuery && recipes.length > 0 ? (
-          <Row className="recipe-grid">
-            {recipes.map(recipe => (
-              <Col key={recipe._id} md={4} className="mb-4">
-                <Card className="h-100 d-flex flex-column">
-                  <Card.Img variant="top" src={`http://localhost:3008/${recipe.image}`} className="recipe-card-img" />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title>{recipe.name}</Card.Title>
-                    <Card.Text className="flex-grow-1">{recipe.description}</Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          <ViewRecipe embedded={true} />
-        )}
+  <div className="recipe-details">
+    <h2>{selectedRecipe.name}</h2>
+    <img src={`http://localhost:3008/${selectedRecipe.image}`} alt={selectedRecipe.name} className="recipe-image" />
+    <p>{selectedRecipe.description}</p>
+    <button onClick={handleBack}>Back to Search Results</button>
+  </div>
+) : searchQuery && recipes.length > 0 ? (
+  <div className="search-results">
+    <h4>Search Results:</h4>
+    <div className="recipe-grid">
+      {recipes.map(recipe => (
+        <div key={recipe._id} className="recipe-card" onClick={() => handleRecipeClick(recipe)}>
+          <h2>{recipe.name}</h2>
+          {recipe.image && (
+            <img src={`http://localhost:3008/${recipe.image}`} alt={recipe.name} className="recipe-image" />
+          )}
+          <p>{recipe.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+) : (
+  <ViewRecipe embedded={true} />
+)}
       </div>
     </div>
   )

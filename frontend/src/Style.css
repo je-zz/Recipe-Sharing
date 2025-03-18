@@ -112,6 +112,7 @@ input:focus + label {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 60px;
 }
 
 /* Blur Effect Container */
@@ -180,6 +181,25 @@ input:focus + label {
   color: #411302;
 }
 
+.input-with-remove {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.input-with-remove input {
+  flex: 1;
+  padding: 8px;
+  margin-right: 8px;
+}
+
+.remove-icon {
+  cursor: pointer;
+  color: red;
+  font-size: 18px;
+}
+
+
 /* Update password */
 
 /* Background Image */
@@ -247,5 +267,60 @@ input:focus + label {
   background-color: #411302;
   color: #b0acac;
 }
+
+/* Footer CSS */
+.footer {
+  
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  z-index: 100;
+}
+
+.footer:hover {
+  visibility: visible;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-contact {
+  text-align: right;
+}
+
+.footer-copyright {
+  text-align: center;
+  flex-grow: 1;
+}
+
+.carousel-image {
+  width: 90%;
+  margin: auto;
+  border-radius: 10px;
+}
+.carousel-caption p {
+  font-size: 70px; /* Adjust the size as per your need */
+  font-weight: bold;
+  color: white;
+}
+
 
 

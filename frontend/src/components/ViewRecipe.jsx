@@ -2,7 +2,8 @@ import Header from './Header';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import '../ViewRecipe.css';
-import { Card, Button, Row, Col } from 'react-bootstrap';
+import Footer from './Footer';
+import { FaWhatsapp } from 'react-icons/fa';
 
 function ViewRecipe({ embedded }) {
   const [data, setData] = useState([]);
@@ -22,44 +23,82 @@ function ViewRecipe({ embedded }) {
     setSelectedRecipe(null);
   };
 
+  const shareOnWhatsApp = (recipe) => {
+    const message = `Check out this amazing recipe: ${recipe.name} - ${recipe.description}.\nCooking Time: ${recipe.cookingTime} minutes.\nServings: ${recipe.servings}\nMore details at: http://localhost:5173/view/${recipe._id}`;
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+  };
+
   return (
-    <div className='view'>
-      {/* Only render the header if not embedded */}
+    <div className='view-container'>
       {!embedded && <Header />}
 
-      <h1 className="title">Recipe Details</h1>
-      <div className="container">
+      
+      <div className="view-container">
+        <h1 className="view-title">Recipe Details</h1>
         {selectedRecipe ? (
-          <Card className="mb-4">
-            <Card.Img variant="top" src={`http://localhost:3008/${selectedRecipe.image}`} />
-            <Card.Body>
-              <Card.Title>{selectedRecipe.name}</Card.Title>
-              <Card.Text><strong>Description:</strong> {selectedRecipe.description}</Card.Text>
-              <Card.Text><strong>Ingredients:</strong> {selectedRecipe.ingredients.join(", ")}</Card.Text>
-              <Card.Text><strong>Steps:</strong> {selectedRecipe.steps.join(", ")}</Card.Text>
-              <Card.Text><strong>Cooking Time:</strong> {selectedRecipe.cookingTime} minutes</Card.Text>
-              <Card.Text><strong>Servings:</strong> {selectedRecipe.servings}</Card.Text>
-              <Card.Text><strong>Cuisine Type:</strong> {selectedRecipe.cuisineType}</Card.Text>
-              <Card.Text><strong>Difficulty:</strong> {selectedRecipe.difficulty}</Card.Text>
-              <Button variant="primary" onClick={handleBack}>Back to All Recipes</Button>
-            </Card.Body>
-          </Card>
+          <div className="card mb-3" style={{ maxWidth: '100%' }}>
+            <div className="row g-0">
+              <div className="col-md-4">
+                <img src={`http://localhost:3008/${selectedRecipe.image}`} className="img-fluid rounded-start" alt={selectedRecipe.name} />
+              </div>
+              <div className="col-md-8">
+                <div className="card-body">
+                  <h5 className="card-title">{selectedRecipe.name}</h5>
+                  <p><strong>Veg Type:</strong> {selectedRecipe.vegType}</p>
+                  <p>{selectedRecipe.description}</p>
+
+                  {selectedRecipe.ingredients?.length > 0 && (
+                    <>
+                      <h4>Ingredients:</h4>
+                      <ul>
+                        {selectedRecipe.ingredients.map((ingredient, index) => (
+                          <li key={index}>{ingredient}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
+                  {selectedRecipe.steps?.length > 0 && (
+                    <>
+                      <h4>Steps:</h4>
+                      <ul>
+                        {selectedRecipe.steps.map((step, index) => (
+                          <li key={index}>{step}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
+                  <p><strong>Cooking Time:</strong> {selectedRecipe.cookingTime} minutes</p>
+                  <p><strong>Servings:</strong> {selectedRecipe.servings}</p>
+                  <p><strong>Cuisine Type:</strong> {selectedRecipe.cuisineType}</p>
+                  <p><strong>Difficulty:</strong> {selectedRecipe.difficulty}</p>
+                  <button onClick={handleBack} className="btn btn-secondary">Back to All Recipes</button>
+                  <button onClick={() => shareOnWhatsApp(selectedRecipe)} className="btn btn-success ms-2">
+                    <FaWhatsapp /> Share on WhatsApp
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         ) : (
-          <Row>
+          <div className="recipe-grid">
             {data.map((recipe, index) => (
-              <Col key={index} md={4} className="mb-4">
-                <Card onClick={() => handleRecipeClick(recipe)}>
-                  <Card.Img variant="top" src={`http://localhost:3008/${recipe.image}`} />
-                  <Card.Body>
-                    <Card.Title>{recipe.name}</Card.Title>
-                    <Card.Text>{recipe.description}</Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
+              <div key={index} className="card" style={{ width: '18rem' }}>
+                <img src={`http://localhost:3008/${recipe.image}`} className="card-img-top" alt={recipe.name} style={{height:'280px'}}/>
+                <div className="card-body">
+                  <h5 className="card-title">{recipe.name}</h5>
+                  <p style={{ color: recipe.vegType === 'Veg' ? 'green' : 'red', fontWeight: 'bold' }}>{recipe.vegType}</p>
+                  <p><strong>Difficulty:</strong> {recipe.difficulty}</p>
+                  <button onClick={() => handleRecipeClick(recipe)} className="btn btn-primary">View Details</button>
+                </div>
+              </div>
             ))}
-          </Row>
+          </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

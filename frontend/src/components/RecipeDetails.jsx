@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useSession } from '../SessionContext';
 import '../Style.css';
 import Header from './Header';
+import Footer from './Footer';
 
 function RecipeDetails() {
   const { user } = useSession();
@@ -15,6 +16,12 @@ function RecipeDetails() {
   const [cuisineType, setCuisineType] = useState('');
   const [difficulty, setDifficulty] = useState('');
   const [file, setFile] = useState(null);
+  const [vegType, setVegType] = useState('Veg'); // Default to 'Veg'
+
+  const handleVegTypeChange = (event) => {
+    setVegType(event.target.value);
+  };
+
 
   const handleIngredientChange = (index, value) => {
     const newIngredients = [...ingredients];
@@ -61,6 +68,10 @@ function RecipeDetails() {
     formData.append('servings', servings);
     formData.append('cuisineType', cuisineType);
     formData.append('difficulty', difficulty);
+    formData.append('vegType', vegType);
+
+    console.log('Form Data:', [...formData.entries()]);
+
 
     try {
       const response = await axios.post('http://localhost:3008/postrecipedetails', formData, { withCredentials: true });
@@ -90,6 +101,25 @@ function RecipeDetails() {
         <form className="Recipe-form" onSubmit={sendData} encType="multipart/form-data">
           <input type="text" placeholder="Enter Recipe Name" value={name} onChange={(e) => setName(e.target.value)} required />
           <input type="text" placeholder="Enter Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+          <div className="veg-options">
+  <label>
+    <input 
+      type="radio" 
+      value="Veg" 
+      checked={vegType === "Veg"} 
+      onChange={handleVegTypeChange} 
+    /> Veg
+  </label>
+  <label>
+    <input 
+      type="radio" 
+      value="Non-Veg" 
+      checked={vegType === "Non-Veg"} 
+      onChange={handleVegTypeChange} 
+    /> Non-Veg
+  </label>
+</div>
+
 
           {ingredients.map((ingredient, index) => (
             <input
@@ -129,6 +159,7 @@ function RecipeDetails() {
         </form>
       </div>
     </div>
+    <Footer />
     </div>
   );
 }

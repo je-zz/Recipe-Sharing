@@ -11,6 +11,8 @@ const recipeSchema = new Schema({
   cuisineType: { type: String },
   difficulty: { type: String },
   image: String,
+  vegType: { type: String, enum: ['Veg', 'Non-Veg'], required: true },
+
   addedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   
 }, { timestamps: true });

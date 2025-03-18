@@ -1,99 +1,171 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import axios from 'axios'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Header from './Header';
-import { useSession } from '../SessionContext'
-import ViewRecipe from './ViewRecipe'
-import '../homepage.css'
-import { Card, Button, Row, Col, Form } from 'react-bootstrap'
+import Footer from './Footer';
+import { useSession } from '../SessionContext';
+import ImageCarousel from './ImageCarousel';
+import '../homepage.css';
+import { FaFilter, FaWhatsapp } from 'react-icons/fa';
 
 function Homepage() {
-  const { user, setUser } = useSession()
-  const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState('')
-  const [recipes, setRecipes] = useState([])
-  const [selectedRecipe, setSelectedRecipe] = useState(null)
+  const { user, setUser } = useSession();
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [recipes, setRecipes] = useState([]);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [difficultyFilter, setDifficultyFilter] = useState('');
+  const [showFilter, setShowFilter] = useState(false);
 
-  const handleLogout = () => {
-    axios.post('http://localhost:3008/logout', {}, { withCredentials: true })
-      .then(res => {
-        if (res.data.success) {
-          setUser(null)
-          navigate('/login')
-          window.location.replace('/login')
-        }
-      })
-      .catch(err => console.log(err))
-  }
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post('http://localhost:3008/logout', {}, { withCredentials: true });
+      if (res.data.success) {
+        setUser(null);
+        navigate('/login');
+        window.location.replace('/login');
+      }
+    } catch (err) {
+      console.error('Logout Error:', err);
+    }
+  };
 
   const handleSearch = async () => {
-    try {
-      const res = await axios.get(`http://localhost:3008/search-recipes?query=${searchQuery}`)
-      setRecipes(res.data)
-    } catch (err) {
-      console.error('Error fetching recipes:', err)
+    if (!searchQuery) {
+      setRecipes([]);
+      return;
     }
-  }
 
-  const handleRecipeClick = (recipe) => {
-    setSelectedRecipe(recipe)
-  }
+    try {
+      const { data } = await axios.get(`http://localhost:3008/search-recipes?query=${searchQuery}`);
+      setRecipes(data);
+    } catch (err) {
+      console.error('Error fetching recipes:', err);
+    }
+  };
 
-  const handleBack = () => {
-    setSelectedRecipe(null)
-  }
+  const handleRecipeClick = (recipe) => setSelectedRecipe(recipe);
+
+  const handleBack = () => setSelectedRecipe(null);
+
+  const handleFilterChange = (difficulty) => {
+    setDifficultyFilter(difficulty);
+    setShowFilter(false);
+  };
+
+  const shareOnWhatsApp = (recipe) => {
+    if (!recipe || !recipe._id) return;
+    const message = `Check out this amazing recipe: ${recipe.name} - ${recipe.description}.
+Cooking Time: ${recipe.cookingTime} minutes.
+Servings: ${recipe.servings}
+More details at: http://localhost:5173/view/${recipe._id}`;
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+  };
+
+  const filteredRecipes = recipes.filter((recipe) => {
+    if (!difficultyFilter) return true;
+    return recipe.difficulty.toLowerCase() === difficultyFilter.toLowerCase();
+  });
 
   useEffect(() => {
-    if (searchQuery) {
-      handleSearch()
-    } else {
-      setRecipes([])
-    }
-  }, [searchQuery])
+    handleSearch();
+  }, [searchQuery]);
 
   return (
     <div className="homepage-container">
       <Header />
-      <h1 className="title">Recipe Management</h1>
 
       <div className="content">
-        <Form.Control
-          type="text"
-          placeholder="Search Recipes..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="mb-4"
-        />
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Search Recipes..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="filter-section">
+            <FaFilter className="filter-icon" onClick={() => setShowFilter(!showFilter)} />
+            {showFilter && (
+              <div className="filter-options">
+                {['All', 'Easy', 'Medium', 'Hard'].map((level) => (
+                  <div
+                    key={level}
+                    className={`filter-option ${difficultyFilter === level || (level === 'All' && !difficultyFilter) ? 'active' : ''}`}
+                    onClick={() => handleFilterChange(level === 'All' ? '' : level)}
+                  >
+                    {level}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
 
         {selectedRecipe ? (
-          <Card className="mb-4">
-            <Card.Img variant="top" src={`http://localhost:3008/${selectedRecipe.image}`} />
-            <Card.Body>
-              <Card.Title>{selectedRecipe.name}</Card.Title>
-              <Card.Text>{selectedRecipe.description}</Card.Text>
-              <Button variant="primary" onClick={handleBack}>Back to Search Results</Button>
-            </Card.Body>
-          </Card>
-        ) : searchQuery && recipes.length > 0 ? (
-          <Row className="recipe-grid">
-            {recipes.map(recipe => (
-              <Col key={recipe._id} md={4} className="mb-4">
-                <Card className="h-100 d-flex flex-column">
-                  <Card.Img variant="top" src={`http://localhost:3008/${recipe.image}`} className="recipe-card-img" />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title>{recipe.name}</Card.Title>
-                    <Card.Text className="flex-grow-1">{recipe.description}</Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
+          <div className="card mb-3" style={{ maxWidth: '100%' }}>
+            <div className="row g-0">
+              <div className="col-md-4">
+                <img src={`http://localhost:3008/${selectedRecipe.image}`} className="img-fluid rounded-start" alt={selectedRecipe.name} />
+              </div>
+              <div className="col-md-8">
+                <div className="card-body">
+                  <h5 className="card-title">{selectedRecipe.name}</h5>
+                  <p><strong>Veg Type:</strong> {selectedRecipe.vegType}</p>
+                  <p>{selectedRecipe.description}</p>
+
+                  <h4>Ingredients:</h4>
+                  <ul>
+                    {selectedRecipe.ingredients.map((ingredient, index) => (
+                      <li key={index}>{ingredient}</li>
+                    ))}
+                  </ul>
+
+                  <h4>Steps:</h4>
+                  <ul>
+                    {selectedRecipe.steps.map((step, index) => (
+                      <li key={index}>{step}</li>
+                    ))}
+                  </ul>
+
+                  <p><strong>Cooking Time:</strong> {selectedRecipe.cookingTime} minutes</p>
+                  <p><strong>Servings:</strong> {selectedRecipe.servings}</p>
+                  <p><strong>Cuisine Type:</strong> {selectedRecipe.cuisineType}</p>
+                  <p><strong>Difficulty:</strong> {selectedRecipe.difficulty}</p>
+
+                  <button onClick={handleBack} className="btn btn-secondary">Back to All Recipes</button>
+                  <button onClick={() => shareOnWhatsApp(selectedRecipe)} className="btn btn-success ms-2">
+                    <FaWhatsapp /> Share on WhatsApp
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : searchQuery && filteredRecipes.length > 0 ? (
+          <div className="recipe-grid">
+            {filteredRecipes.map((recipe) => (
+              <div key={recipe._id} className="card" style={{ width: '18rem' }}>
+                <img src={`http://localhost:3008/${recipe.image}`} className="card-img-top" alt={recipe.name} style={{height:'280px'}}/>
+                <div className="card-body">
+                  <h5 className="card-title">{recipe.name}</h5>
+                  <p style={{ color: recipe.vegType === 'Veg' ? 'green' : 'red', fontWeight: 'bold' }}>{recipe.vegType}</p>
+                  <p><strong>Difficulty:</strong> {recipe.difficulty}</p>
+                  <button onClick={() => handleRecipeClick(recipe)} className="btn btn-primary">View Details</button>
+                </div>
+              </div>
             ))}
-          </Row>
+          </div>
         ) : (
-          <ViewRecipe embedded={true} />
+          <div className="no-recipes">
+            <p>Start searching for recipes to see results.</p>
+          </div>
         )}
       </div>
+
+      <ImageCarousel className="image-carousel" />
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default Homepage
+export default Homepage;

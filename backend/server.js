@@ -51,9 +51,10 @@ const sendEmail = async (email, name, password) => {
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: ["http://localhost:5173"], 
-  methods: ["POST", "GET"], 
-  credentials: true                  
+  origin: ['http://localhost:5173'],
+  methods: ['POST', 'GET', 'PUT', 'DELETE'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(express.static('uploads'));
 app.use(cookieParser());
@@ -89,8 +90,6 @@ app.get('/', (req, res) => {
 });
 
 
-
-
 // User Login
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
@@ -110,8 +109,6 @@ app.post("/login", (req, res) => {
       }
     });
 });
-
-
 
 
 // User Logout
@@ -150,6 +147,9 @@ app.post('/postrecipedetails', upload.single('file'), async (req, res) => {
     if (!req.session.userID) {
       return res.status(401).json({ message: "Unauthorized" });
     }
+    console.log('Request Body:', req.body);
+    console.log('Veg Type:', req.body.vegType);
+
 
     const newRecipe = new Recipe({
       name: req.body.name,
@@ -161,8 +161,10 @@ app.post('/postrecipedetails', upload.single('file'), async (req, res) => {
       cuisineType: req.body.cuisineType,
       difficulty: req.body.difficulty,
       image: req.file.filename,
+      vegType: req.body.vegType,
       addedBy: req.session.userID // ✅ Store the user ID in database
     });
+    
 
     await newRecipe.save();
 
@@ -186,6 +188,7 @@ app.get('/getrecipedetails', async (req, res) => {
   }
 });
 
+
 // Get Logged-in User's Recipes
 app.get('/getmyrecipes', async (req, res) => {
   try {
@@ -202,57 +205,6 @@ app.get('/getmyrecipes', async (req, res) => {
 });
 
 
-// Like a Recipe
-app.post('/recipes/:id/like', async (req, res) => {
-  try {
-    const recipeId = req.params.id;
-    const recipe = await Recipe.findById(recipeId);
-
-    if (!recipe) {
-      return res.status(404).json({ message: "Recipe not found" });
-    }
-
-    recipe.likes += 1; // Increment the likes
-    await recipe.save();
-
-    res.status(200).json({ likes: recipe.likes });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-
-// Add a Comment to a Recipe
-app.post('/recipes/:id/comment', async (req, res) => {
-  try {
-    const recipeId = req.params.id;
-    const { text } = req.body;
-
-    if (!text || text.trim() === "") {
-      return res.status(400).json({ message: "Comment text is required" });
-    }
-
-    const recipe = await Recipe.findById(recipeId);
-
-    if (!recipe) {
-      return res.status(404).json({ message: "Recipe not found" });
-    }
-
-    // Add the new comment
-    recipe.comments.push({
-      user: req.session.userID || null, // Reference to the logged-in user (if available)
-      text: text,
-    });
-
-    await recipe.save();
-
-    res.status(201).json({ comments: recipe.comments });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-});
 
 
 
@@ -285,7 +237,8 @@ app.get('/search-recipes', async (req, res) => {
     const recipes = await Recipe.find({
       $or: [
         { name: { $regex: query, $options: 'i' } }, // Search by name (case-insensitive)
-        { ingredients: { $regex: query, $options: 'i' } } // Search by ingredients
+        { ingredients: { $regex: query, $options: 'i' } }, // Search by ingredients
+        { vegType: { $regex: query, $options: 'i' } }
       ]
     });
     res.status(200).json(recipes);
@@ -315,6 +268,56 @@ app.get('/get-user-email', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+// Update Recipe
+// Update Recipe
+app.put('/update-recipe/:id', async (req, res) => {
+  try {
+    const recipeId = req.params.id;
+    const { name, description, ingredients, steps, cookingTime, servings, cuisineType, difficulty, vegType } = req.body;
+
+    const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId, {
+      name,
+      description,
+      ingredients: Array.isArray(ingredients) ? ingredients : ingredients.split(', '),
+      steps: Array.isArray(steps) ? steps : steps.split(', '),
+      cookingTime,
+      servings,
+      cuisineType,
+      difficulty,
+      vegType
+    }, { new: true });
+
+    if (!updatedRecipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
+    res.status(200).json({ message: 'Recipe updated successfully', updatedRecipe });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+// Delete Recipe
+app.delete('/delete-recipe/:id', async (req, res) => {
+  try {
+    const recipeId = req.params.id;
+    const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
+
+    if (!deletedRecipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
+    res.status(200).json({ message: 'Recipe deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

@@ -11,6 +11,9 @@ import MyRecipes from './components/MyRecipes'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import UpdatePassword from './components/UpdatePassword'
+import Footer from './components/Footer'
+import ImageCarousel from './components/ImageCarousel'
+import EditRecipeForm from './components/EditRecipeForm'
 
 // Prevent back button after logout
 function PreventBackAfterLogout() {
@@ -50,6 +53,9 @@ function App() {
         <Route path='/ViewRecipe' element={<ViewRecipe />} />
         <Route path='/MyRecipes' element={<MyRecipes />} />
         <Route path='/UpdatePassword' element={<UpdatePassword />} />
+        <Route path='/Footer' element={<Footer />} />
+        <Route path='/ImageCarousel' element={<ImageCarousel />} />
+        <Route path='/EditRecipeForm' element={<EditRecipeForm />} />
       </Routes>
     </BrowserRouter>
   )

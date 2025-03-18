@@ -1,99 +1,59 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import axios from 'axios'
-import Header from './Header';
-import { useSession } from '../SessionContext'
-import ViewRecipe from './ViewRecipe'
-import '../homepage.css'
-import { Card, Button, Row, Col, Form } from 'react-bootstrap'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useSession } from '../SessionContext';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import '../homepage.css';
+import { FaBars, FaTimes } from 'react-icons/fa';
 
-function Homepage() {
-  const { user, setUser } = useSession()
-  const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState('')
-  const [recipes, setRecipes] = useState([])
-  const [selectedRecipe, setSelectedRecipe] = useState(null)
+function Header() {
+  const { user, setUser } = useSession();
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleLogout = () => {
     axios.post('http://localhost:3008/logout', {}, { withCredentials: true })
       .then(res => {
         if (res.data.success) {
-          setUser(null)
-          navigate('/login')
-          window.location.replace('/login')
+          setUser(null);
+          navigate('/login');
+          window.location.replace('/login');
         }
       })
-      .catch(err => console.log(err))
-  }
+      .catch(err => console.log(err));
+  };
 
-  const handleSearch = async () => {
-    try {
-      const res = await axios.get(`http://localhost:3008/search-recipes?query=${searchQuery}`)
-      setRecipes(res.data)
-    } catch (err) {
-      console.error('Error fetching recipes:', err)
-    }
-  }
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
-  const handleRecipeClick = (recipe) => {
-    setSelectedRecipe(recipe)
-  }
-
-  const handleBack = () => {
-    setSelectedRecipe(null)
-  }
-
-  useEffect(() => {
-    if (searchQuery) {
-      handleSearch()
-    } else {
-      setRecipes([])
-    }
-  }, [searchQuery])
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
 
   return (
-    <div className="homepage-container">
-      <Header />
-      <h1 className="title">Recipe Management</h1>
-
-      <div className="content">
-        <Form.Control
-          type="text"
-          placeholder="Search Recipes..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="mb-4"
-        />
-
-        {selectedRecipe ? (
-          <Card className="mb-4">
-            <Card.Img variant="top" src={`http://localhost:3008/${selectedRecipe.image}`} />
-            <Card.Body>
-              <Card.Title>{selectedRecipe.name}</Card.Title>
-              <Card.Text>{selectedRecipe.description}</Card.Text>
-              <Button variant="primary" onClick={handleBack}>Back to Search Results</Button>
-            </Card.Body>
-          </Card>
-        ) : searchQuery && recipes.length > 0 ? (
-          <Row className="recipe-grid mt-4">
-            {recipes.map(recipe => (
-              <Col key={recipe._id} md={4} className="mb-4">
-                <Card className="h-100 d-flex flex-column recipe-card">
-                  <Card.Img variant="top" src={`http://localhost:3008/${recipe.image}`} className="recipe-card-img" />
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title>{recipe.name}</Card.Title>
-                    <Card.Text className="flex-grow-1">{recipe.description}</Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          <ViewRecipe embedded={true} />
-        )}
+    <header className="header">
+      <div className="hamburger" onClick={toggleMenu}>
+        {isOpen ? <FaTimes /> : <FaBars />}
       </div>
-    </div>
-  )
+      <nav className={`nav-bar ${isOpen ? 'active' : ''}`}>
+        <Link to="/home">Home</Link>
+        <Link to="/RecipeDetails">Add Recipe</Link>
+        <Link to="/ViewRecipe">View Recipe</Link>
+        <Link to="/MyRecipes">My Recipes</Link>
+      </nav>
+      <div className="user-section">
+        <h4 onClick={toggleDropdown} className="user-name">Welcome {user}</h4>
+        {dropdownOpen && (
+          <div className="dropdown">
+            <Link to="/UpdatePassword" className="dropdown-item">Update Password</Link>
+          </div>
+        )}
+        <button className="logout-btn" onClick={handleLogout}>Logout</button>
+      </div>
+    </header>
+  );
 }
 
-export default Homepage
+export default Header;

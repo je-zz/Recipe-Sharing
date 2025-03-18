@@ -1,118 +1,15 @@
 .my-container {
-  padding: 10px;
+  padding: 20px 50px;
+  margin-top: 85px;
 }
 
 .my-title {
   text-align: center;
   margin-bottom: 20px;
   background-color: white;
-  padding: 10px;
-  z-index: 2;
-  position: relative;
-}
-
-.my-recipe-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.my-recipe-card {
-  border: 1px solid #ddd;
-  padding: 15px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  cursor: pointer;
-}
-
-.my-recipe-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 8px;
-  display: block;
-}
-
-.my-recipe-details {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 20px;
-}
-
-.my-image-section {
-  flex: 1;
-}
-
-.my-details-section {
-  flex: 2;
-}
-
-button {
-  padding: 8px 16px;
-  margin-top: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-.my-recipe-details-page {
-  position: relative;
-  width: 98vw;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.my-background-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  filter: blur(8px);
-  z-index: -1;
-}
-
-.my-details-container {
-  max-width: 800px;
-  margin: 100px 0 0 350px;
-  padding: 20px 40px;
-  background-color: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(200px);
-  border-radius: 20px;
-  color: white;
-  max-height: 80vh; /* Limit the height */
-  overflow-y: auto; /* Allow scrolling */
-}
-
-.my-details-container h2 {
-  font-size: 2rem;
-  font-weight: bold;
-}
-
-.my-details-container p {
-  margin-bottom: 10px;
-}
-
-button {
   padding: 10px 20px;
-  background-color: #ff6347;
-  border: none;
-  color: white;
   border-radius: 10px;
-  cursor: pointer;
-  margin-top: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
 }
-
-button:hover {
-  background-color: #e5533d;
-}
-

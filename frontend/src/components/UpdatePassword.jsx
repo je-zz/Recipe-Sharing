@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../Style.css'; 
 import Header from './Header';
+import Footer from './Footer';
 
 function UpdatePassword() {
   const [email, setEmail] = useState('');
@@ -82,6 +83,7 @@ function UpdatePassword() {
         </form>
       </div>
     </div>
+    <Footer />
     </div>
   );
 }

@@ -13,11 +13,11 @@ function Footer() {
         <Link to="/UpdatePassword">Update Password</Link>
       </div>
       <div className="footer-copyright">
-        <p>&copy; 2025 Cook Book. All Rights Reserved.</p>
+        <p>&copy; 2025 Chef Book. All Rights Reserved.</p>
       </div>
       <div className="footer-contact">
-        <p>Contact Us: cookbook@example.com</p>
-        <p>Phone: +1 234 567 890</p>
+        <p>Contact Us: chefbook@outlook.com</p>
+        <p>Phone: +91 8888 21 5004</p>
       </div>
     </footer>
   );
